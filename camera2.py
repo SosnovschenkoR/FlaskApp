@@ -28,8 +28,8 @@ class VideoCamera(object):
 
     def get_frame(self):
         success, frame = VideoCamera.video.read()
-        # cv2.imwrite("frame%d.jpg" % self.count, image)
-        # self.count += 1
+        #cv2.imwrite("frame%d.jpg" % self.count, image)
+        #self.count += 1
         return frame
 
     def get_jpeg(self):

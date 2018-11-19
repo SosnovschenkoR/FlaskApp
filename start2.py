@@ -13,12 +13,9 @@ app = Flask(__name__)
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-p", "--prototxt", required=True,
-    help="path to Caffe 'deploy' prototxt file")
-ap.add_argument("-m", "--model", required=True,
-    help="path to Caffe pre-trained model")
-ap.add_argument("-c", "--confidence", type=float, default=0.2,
-    help="minimum probability to filter weak detections")
+ap.add_argument("-p", "--prototxt", required=True, help="path to Caffe 'deploy' prototxt file")
+ap.add_argument("-m", "--model", required=True, help="path to Caffe pre-trained model")
+ap.add_argument("-c", "--confidence", type=float, default=0.2, help="minimum probability to filter weak detections")
 args = vars(ap.parse_args())
 
 # initialize the list of class labels MobileNet SSD was trained to
@@ -55,14 +52,17 @@ def gen(camera):
 def video_feed():
     return Response(gen(VideoCamera()), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/video_feed2')
+def video_feed2():
+    output = gen3(VideoCamera())
+    return success_handle(output)
 
 def gen2(camera):
     while True:
         frame = camera.get_frame()
         frame = imutils.resize(frame, width=400)
         (h, w) = frame.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)),
-                                     0.007843, (300, 300), 127.5)
+        blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 0.007843, (300, 300), 127.5)
 
         # pass the blob through the network and obtain the detections and
         # predictions
@@ -104,13 +104,10 @@ def gen3(camera):
             (startX, startY, endX, endY) = box.astype("int")
 
             # draw the prediction on the frame
-            label = "{}: {:.2f}%".format(CLASSES[idx],
-                                         confidence * 100)
-            cv2.rectangle(frame, (startX, startY), (endX, endY),
-                          COLORS[idx], 2)
+            label = "{}: {:.2f}%".format(CLASSES[idx], confidence * 100)
+            cv2.rectangle(frame, (startX, startY), (endX, endY), COLORS[idx], 2)
             y = startY - 15 if startY - 15 > 15 else startY + 15
-            cv2.putText(frame, label, (startX, y),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+            cv2.putText(frame, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
 
     info = "pers: " + str(obj_count);
     #return json.dumps({"api": '1.0'})
@@ -118,12 +115,6 @@ def gen3(camera):
 
 def success_handle(output, status=200, mimetype='application/json'):
     return Response(output, status=status, mimetype=mimetype)
-
-
-@app.route('/video_feed2')
-def video_feed2():
-    output = gen3(VideoCamera())
-    return success_handle(output)
 
 
 @app.route('/api', methods=['GET'])
