@@ -5,5 +5,13 @@
   <body>
     <h1>Video Streaming Demonstration</h1>
     <img src="{{ url_for('video_feed') }}">
+    <ul>
+      <li class="right" style="margin-right: 10px">
+        <a href="{{ url_for('video_feed') }}" title="Video feed">Video feed</a>
+      </li>
+      <li class="right" style="margin-right: 10px">
+        <a href="{{ url_for('video_feed2') }}" title="Request people count">Request people count (JSON)</a>
+      </li>
+    </ul>
   </body>
 </html>
