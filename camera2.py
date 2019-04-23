@@ -12,10 +12,10 @@ class VideoCamera(object):
         # Using OpenCV to capture from device 0. If you have trouble capturing
         # from a webcam, comment the line below out and use a video file
         # instead.
-        #if VideoCamera.class_var == 0:
-            #VideoCamera.video = cv2.VideoCapture(0)
+        if VideoCamera.class_var == 0:
+            VideoCamera.video = cv2.VideoCapture(0)
             #VideoCamera.video = cv2.VideoCapture(self.url)
-        self.video = cv2.VideoCapture(self.url)
+        #self.video = cv2.VideoCapture(self.url)
         #self.video = cv2.VideoCapture(0)
 
         VideoCamera.class_var += 1
@@ -25,17 +25,20 @@ class VideoCamera(object):
 
     def __del__(self):
         VideoCamera.class_var -= 1
-        #if VideoCamera.class_var == 0:
-        #    VideoCamera.video.release()
-        self.video.release()
+        if VideoCamera.class_var == 0:
+            VideoCamera.video.release()
+        #self.video.release()
 
 
     def get_frame(self):
         #success, frame = VideoCamera.video.read()
-        success, frame = self.video.read()
+        #success, frame = self.video.read()
         #cv2.imwrite("frame%d.jpg" % self.count, image)
         #self.count += 1
-        return frame
+        frame = 0
+        success = False
+        if success:
+            return frame
 
 
     def get_jpeg(self):

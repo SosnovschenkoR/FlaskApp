@@ -56,7 +56,7 @@ def gen(camera):
 
 @app.route('/video_feed')
 def video_feed():
-    #return Response(gen(VideoCamera()), mimetype='multipart/x-mixed-replace; boundary=frame')
+    # return Response(gen(VideoCamera()), mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(gen2(VideoCamera()), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
@@ -65,7 +65,8 @@ def video_feed2():
     output = gen3(VideoCamera())
     return success_handle(output)
 
-#@app.before_first_request
+
+# @app.before_first_request
 # def activate_job():
 #     def run_job():
 #         while True:
@@ -78,19 +79,21 @@ def video_feed2():
 @app.route('/request_count')
 def request_count():
     value = cache.get('global_obj_count')
-    info = {"pers": str(value), "date": datetime.datetime.now()};
+    info = {"pers": str(value), "date": datetime.datetime.now()}
 
     def customconverter(o):
         if isinstance(o, datetime.datetime):
             return o.__str__()
 
-    output = json.dumps(info, default = customconverter)
+    output = json.dumps(info, default=customconverter)
     return success_handle(output)
 
 
 def gen2(camera):
     while True:
         frame = camera.get_frame()
+        if np.shape(frame) == ():
+            continue
         time.sleep(1.0)
         frame = imutils.resize(frame, width=400)
         (h, w) = frame.shape[:2]
@@ -100,7 +103,7 @@ def gen2(camera):
         # predictions
         net.setInput(blob)
         detections = net.forward()
-        #obj_count = 0
+        # obj_count = 0
 
         # loop over the detections
         for i in np.arange(0, detections.shape[2]):
@@ -117,7 +120,7 @@ def gen2(camera):
                 idx = int(detections[0, 0, i, 1])
                 if CLASSES[idx] != "person":
                     continue
-                #obj_count += 1
+                # obj_count += 1
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
 
@@ -126,6 +129,9 @@ def gen2(camera):
                 cv2.rectangle(frame, (startX, startY), (endX, endY), COLORS[idx], 2)
                 y = startY - 15 if startY - 15 > 15 else startY + 15
                 cv2.putText(frame, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+
+        label = '{:%d.%m.%Y %H:%M:%S}'.format(datetime.datetime.now())
+        cv2.putText(frame, label, (0, 290), cv2.FONT_HERSHEY_SIMPLEX, .4, (255, 255, 255), 1)
 
         ret, jpeg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
@@ -170,7 +176,7 @@ def gen3(camera):
 
     # return json.dumps({"api": '1.0'})
     # return json.dumps({"api": info})
-    return json.dumps(info, default = customconverter)
+    return json.dumps(info, default=customconverter)
 
 
 def success_handle(output, status=200, mimetype='application/json'):
@@ -185,6 +191,8 @@ def homepage():
 
 if __name__ == "__main__":
     cache.set('global_obj_count', 0)
+
+
     def test_job():
         while True:
             print("Run recurring task")
@@ -223,9 +231,9 @@ if __name__ == "__main__":
                     obj_count = obj_count + 1
             cache.set('global_obj_count', obj_count)
 
-    #thread = threading.Thread(target=people_counter_job, args=(VideoCamera(),))
-    #thread.daemon = True
-    #thread.start()
+
+    # thread = threading.Thread(target=people_counter_job, args=(VideoCamera(),))
+    # thread.daemon = True
+    # thread.start()
 
     app.run(host='127.0.0.1', debug=True, threaded=True, use_reloader=False)
-

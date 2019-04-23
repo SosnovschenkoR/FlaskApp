@@ -12,8 +12,8 @@ class VideoCamera(object):
         # from a webcam, comment the line below out and use a video file
         # instead.
         if VideoCamera.class_var == 0:
-            VideoCamera.video = cv2.VideoCapture(0)
-            #VideoCamera.video = cv2.VideoCapture(self.url)
+            #VideoCamera.video = cv2.VideoCapture(0)
+            VideoCamera.video = cv2.VideoCapture(self.url)
         VideoCamera.class_var += 1
         # If you decide to use video.mp4, you must have this file in the folder
         # as the main.py.
