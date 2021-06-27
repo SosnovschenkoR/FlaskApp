@@ -1,4 +1,4 @@
-#!E:\project\PycharmProjects\FirstApp\venv\Scripts\python.exe
+#!E:\project\PycharmProjects\ComputerVision\FlaskApp\venv\Scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'pip==10.0.1','console_scripts','pip3'
 __requires__ = 'pip==10.0.1'
 import re
