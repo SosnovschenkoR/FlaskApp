@@ -15,6 +15,8 @@ class VideoCamera(object):
         if VideoCamera.class_var == 0:
             VideoCamera.video = cv2.VideoCapture(0)
             #VideoCamera.video = cv2.VideoCapture(self.url)
+        #self.video = cv2.VideoCapture(self.url)
+        #self.video = cv2.VideoCapture(0)
 
         VideoCamera.class_var += 1
         # If you decide to use video.mp4, you must have this file in the folder
@@ -25,15 +27,23 @@ class VideoCamera(object):
         VideoCamera.class_var -= 1
         if VideoCamera.class_var == 0:
             VideoCamera.video.release()
+        #self.video.release()
+
 
     def get_frame(self):
-        success, frame = VideoCamera.video.read()
+        #success, frame = VideoCamera.video.read()
+        #success, frame = self.video.read()
         #cv2.imwrite("frame%d.jpg" % self.count, image)
         #self.count += 1
-        return frame
+        frame = 0
+        success = False
+        if success:
+            return frame
+
 
     def get_jpeg(self):
-        success, image = VideoCamera.video.read()
+        #success, image = VideoCamera.video.read()
+        success, image = self.video.read()
 
         # We are using Motion JPEG, but OpenCV defaults to capture raw images,
         # so we must encode it into JPEG in order to correctly display the

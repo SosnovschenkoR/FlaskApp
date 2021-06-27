@@ -1,0 +1,21 @@
+{
+  "DEFAULT": {
+    "PROTOTXT": "../OpenCV/MobileNetSSD_deploy.prototxt",
+    "MODEL": "../OpenCV/MobileNetSSD_deploy.caffemodel",
+    "CONFIDENCE": 0.2
+  },
+  "CAMERAS": [
+    {
+      "id": 1,
+      "url": "http://root:video@192.168.57.166/mjpg/video.mjpg",
+      "description": "БК1-301",
+      "active": true
+    },
+    {
+      "id": 2,
+      "url": "http://127.0.0.1:8081/video.mjpg",
+      "description": "БК1-302",
+      "active": true
+    }
+  ]
+}
