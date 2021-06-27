@@ -9,7 +9,7 @@ import numpy as np
 import cv2
 
 from flask import Flask, render_template, Response
-from werkzeug.contrib.cache import SimpleCache
+from cachelib.simple import SimpleCache
 from camera2 import VideoCamera
 
 app = Flask(__name__)
